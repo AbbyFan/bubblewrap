@@ -1,4 +1,4 @@
-import { _decorator, Component, Node, Sprite, SpriteFrame, Color, tween, Vec3, UITransform, Graphics } from 'cc';
+import { _decorator, Component, Node, Sprite, SpriteFrame, Color, tween, Tween, Vec3, UITransform, Graphics, Layers } from 'cc';
 import { COLORS, BUBBLE_FRAMES } from './ColorDefs';
 const { ccclass, property } = _decorator;
 
@@ -16,6 +16,7 @@ export class Bubble extends Component {
     private colorKey = 'yellow';
     private isRainbow = false;
     private isChanging = false;
+    private isLocked = false;
     private changeIdx = 0;
     private static CHANGE_KEYS = ['red', 'orange', 'yellow', 'green', 'cyan', 'blue', 'violet'];
 
@@ -35,6 +36,10 @@ export class Bubble extends Component {
         return this.isChanging;
     }
 
+    get locked(): boolean {
+        return this.isLocked;
+    }
+
     onLoad() {
         this.sprite = this.getComponent(Sprite)!;
         this.baseFrame = this.sprite.spriteFrame;
@@ -45,9 +50,11 @@ export class Bubble extends Component {
     setColor(key: string) {
         this.stopChanging();
         this.clearRainbowRing();
+        this.setLocked(false);
         this.colorKey = key;
         this.isRainbow = false;
-        tween(this.sprite).stop();
+        // 注意：新建的 Tween 实例调用 stop() 是空操作，必须用 stopAllByTarget
+        Tween.stopAllByTarget(this.sprite);
         const sp = this.getComponent(Sprite)!;
         this.sprite = sp;
         const frame = BUBBLE_FRAMES[key];
@@ -64,13 +71,14 @@ export class Bubble extends Component {
     /** 彩虹泡泡：静态多彩彩虹纹理（固定不变），可匹配任意目标色 */
     setRainbow() {
         this.stopChanging();
+        this.setLocked(false);
         this.clearRainbowRing();
         this.colorKey = 'rainbow';
         this.isRainbow = true;
         this.isChanging = false;
         const sp = this.getComponent(Sprite)!;
         this.sprite = sp;
-        tween(this.sprite).stop();
+        Tween.stopAllByTarget(this.sprite);
         // 使用静态彩虹纹理；若纹理尚未加载完成则先用基座纹理+暖白兜底
         const frame = BUBBLE_FRAMES['rainbow'];
         if (frame) {
@@ -85,6 +93,7 @@ export class Bubble extends Component {
     /** 变色泡泡：红→橙→黄→绿→青→蓝→紫 循环，当前颜色 = 目标色时才可击破 */
     setChanging() {
         this.clearRainbowRing();
+        this.setLocked(false);
         this.isRainbow = false;
         this.isChanging = true;
         this.changeIdx = randomIndex();
@@ -122,8 +131,8 @@ export class Bubble extends Component {
         this._isPop = true;
         this.stopChanging();
         this.clearRainbowRing();
-        tween(this.sprite).stop();
-        tween(this.node).stop();
+        Tween.stopAllByTarget(this.sprite);
+        Tween.stopAllByTarget(this.node);
         tween(this.node)
             .to(0.14, { scale: new Vec3(this.originScale * 1.35, this.originScale * 1.35, 1) }, { easing: 'quadOut' })
             .start();
@@ -137,7 +146,7 @@ export class Bubble extends Component {
     /** 相邻震动：短促的放大回落脉冲 */
     shake() {
         if (this._isPop) return;
-        tween(this.node).stop();
+        Tween.stopAllByTarget(this.node);
         tween(this.node)
             .to(0.06, { scale: new Vec3(this.originScale * 1.12, this.originScale * 1.12, 1) }, { easing: 'quadOut' })
             .to(0.08, { scale: new Vec3(this.originScale, this.originScale, 1) }, { easing: 'quadIn' })
@@ -148,8 +157,11 @@ export class Bubble extends Component {
         this._isPop = false;
         this.stopChanging();
         this.clearRainbowRing();
-        tween(this.node).stop();
-        tween(this.sprite).stop();
+        this.setLocked(false);
+        // 关键：必须真正掐掉击破时的“放大 + 淡出”动画，
+        // 否则补位后的新泡泡会被旧动画拉到全透明并保持 1.35 倍缩放 —— 表现为“没有补位”
+        Tween.stopAllByTarget(this.node);
+        Tween.stopAllByTarget(this.sprite);
         this.node.setScale(this.originScale, this.originScale, 1);
         // 关键：泡泡使用后就不是彩虹了——还原为普通颜色，
         // 之后是否变成彩虹由外部 setRainbow() 显式调用决定，不再"自带"彩虹身份
@@ -162,6 +174,8 @@ export class Bubble extends Component {
         } else {
             this.sprite.color = COLORS[this.colorKey] ? COLORS[this.colorKey].tint : Color.WHITE;
         }
+        // 兜底：确保不残留半透明状态（某些机型上动画被中断时会留下 alpha=0）
+        if (this.sprite.color.a < 255) this.sprite.color = Color.WHITE;
     }
 
     private ensureRainbowRing() {
@@ -179,6 +193,33 @@ export class Bubble extends Component {
     private clearRainbowRing() {
         const ring = this.node.getChildByName('RainbowRing');
         if (ring) ring.destroy();
+    }
+
+    /** 锁定泡泡：未解锁前不可爆破（需先炸掉相邻任意泡泡） */
+    setLocked(on: boolean) {
+        this.isLocked = on;
+        const old = this.node.getChildByName('LockIcon');
+        if (old) old.destroy();
+        if (!on) return;
+        const icon = new Node('LockIcon');
+        icon.layer = Layers.Enum.UI_2D;
+        icon.addComponent(UITransform).setContentSize(36, 36);
+        const g = icon.addComponent(Graphics);
+        // 半透明深色圆底 + 白色锁形
+        g.fillColor = new Color(70, 92, 118, 150);
+        g.circle(0, 0, 13);
+        g.fill();
+        g.lineWidth = 3;
+        g.strokeColor = new Color(255, 255, 255, 230);
+        g.moveTo(-5, 1);
+        g.lineTo(-5, 5);
+        g.arc(0, 5, 5, Math.PI, 0, false);
+        g.lineTo(5, 1);
+        g.stroke();
+        g.fillColor = new Color(255, 255, 255, 235);
+        g.roundRect(-6, -7, 12, 9, 2);
+        g.fill();
+        this.node.addChild(icon);
     }
 }
 
