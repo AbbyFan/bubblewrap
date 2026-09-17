@@ -745,6 +745,16 @@ export class GameManager extends Component {
             lastClip: () => (this.popAudio.clip ? this.popAudio.clip.name : ''),
             errors: () => this.errLog.slice(),
             chainPops: () => this.chainPopCount,
+            // 锁样式实时切换（0 深色圆底锁 / 1 纯透明罩 / 2 透明罩+小锁 / 3 虚线环+中央锁）
+            setLockStyle: (n: number) => {
+                Bubble.lockStyle = n;
+                for (const b of this.bubbleList) {
+                    if (!b.isValid) continue;
+                    const c = b.getComponent(Bubble);
+                    if (c && c.locked) c.setLocked(true);
+                }
+                return Bubble.lockStyle;
+            },
             bubbles: () => this.bubbleList.filter((b) => b.isValid).map((b) => {
                 const c = b.getComponent(Bubble);
                 return {
