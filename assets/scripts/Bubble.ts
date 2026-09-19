@@ -231,6 +231,8 @@ export class Bubble extends Component {
         case 7: // 冰封·浓（上一版浓度，仅用于对比）
             drawIce(g, R, 168);
             break;
+        case 99: // 调试：不画任何锁标记（用于测量冰面轮廓）
+            break;
         case 1: // 纯透明罩：像给泡泡盖了一层玻璃罩
             drawDome(g, R);
             break;
@@ -324,38 +326,79 @@ function drawDashedRing(g: Graphics, R: number) {
     }
 }
 
-/** 冰封：冷雾外圈 + 半透明冰面 + 冰晶切面 + 霜点 + 左上闪光（veil 越小冰面越浅） */
+/**
+ * 冰封：不规则冰面（每颗泡泡形状都不同）+ 冷雾外圈 + 冰晶切面 + 冰刺 + 霜点 + 左上闪光。
+ * veil 越小冰面越浅。
+ */
 function drawIce(g: Graphics, R: number, veil = 108) {
-    // 外圈冷雾
-    g.lineWidth = 8;
+    // 11 个顶点的半径抖动，三遍描边/填充共用同一副轮廓
+    const N = 9;
+    const jit: number[] = [];
+    // 顶点半径抖动更大（0.86~1.10），配合较少的顶点 → 轮廓明显不是圆形
+    for (let i = 0; i < N; i++) jit.push(0.86 + Math.random() * 0.24 + 0.035 * Math.sin(i * 2.7));
+    const blob = (scale: number) => {
+        const pts: { x: number; y: number }[] = [];
+        for (let i = 0; i < N; i++) {
+            const a = (i / N) * Math.PI * 2;
+            const rr = R * jit[i] * scale;
+            pts.push({ x: Math.cos(a) * rr, y: Math.sin(a) * rr });
+        }
+        // 以顶点为控制点、边中点为锚点：得到圆润但明显不规则的闭合轮廓
+        const mid = (p: { x: number; y: number }, q: { x: number; y: number }) => ({ x: (p.x + q.x) / 2, y: (p.y + q.y) / 2 });
+        const start = mid(pts[N - 1], pts[0]);
+        g.moveTo(start.x, start.y);
+        for (let i = 0; i < N; i++) {
+            const cur = pts[i];
+            const nxt = mid(cur, pts[(i + 1) % N]);
+            g.quadraticCurveTo(cur.x, cur.y, nxt.x, nxt.y);
+        }
+        g.close();
+    };
+
+    // 冷雾外圈
+    blob(1.07);
+    g.lineWidth = 9;
     g.strokeColor = new Color(176, 216, 240, 58);
-    g.circle(0, 0, R);
     g.stroke();
 
     // 冰面
+    blob(1.0);
     g.fillColor = new Color(210, 234, 248, veil);
-    g.circle(0, 0, R - 1);
     g.fill();
+
+    // 冰刺（向外支出的小尖角，强化“结冰”的破碎感）
+    for (let k = 0; k < 4; k++) {
+        const a = Math.random() * Math.PI * 2;
+        const r0 = R * 0.84;
+        const r1 = R * (1.05 + Math.random() * 0.07);
+        const w = 0.22 + Math.random() * 0.12;
+        g.fillColor = new Color(226, 241, 252, Math.min(255, veil + 46));
+        g.moveTo(Math.cos(a - w) * r0, Math.sin(a - w) * r0);
+        g.lineTo(Math.cos(a) * r1, Math.sin(a) * r1);
+        g.lineTo(Math.cos(a + w) * r0, Math.sin(a + w) * r0);
+        g.close();
+        g.fill();
+    }
 
     // 冰晶切面（两块），让冰面有“冻住”的体积感
     g.fillColor = new Color(255, 255, 255, 52);
-    g.moveTo(-R * 0.78, R * 0.16);
-    g.lineTo(-R * 0.05, R * 0.92);
-    g.lineTo(R * 0.52, R * 0.06);
+    g.moveTo(-R * 0.66, R * 0.14);
+    g.lineTo(-R * 0.04, R * 0.78);
+    g.lineTo(R * 0.44, R * 0.05);
     g.close();
     g.fill();
 
     g.fillColor = new Color(255, 255, 255, 40);
-    g.moveTo(-R * 0.28, -R * 0.88);
-    g.lineTo(R * 0.82, -R * 0.14);
-    g.lineTo(-R * 0.02, R * 0.22);
+    g.moveTo(-R * 0.24, -R * 0.75);
+    g.lineTo(R * 0.70, -R * 0.12);
+    g.lineTo(-R * 0.02, R * 0.19);
     g.close();
     g.fill();
 
     // 冰缘亮边
+    blob(1.0);
     g.lineWidth = 2.6;
     g.strokeColor = new Color(238, 250, 255, 225);
-    g.circle(0, 0, R - 2);
     g.stroke();
 
     // 霜点

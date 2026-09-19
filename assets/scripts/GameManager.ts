@@ -64,7 +64,7 @@ const LEVELS: LevelConfig[] = [
         num: '1-1', theme: '限时', keywords: '倒计时 · 原位动态刷新',
         narrative: '在有限时间里，尽可能完成颜色队列。（第一章）',
         outro: '颜色变多了——注意分辨五色泡泡。',
-        gridCols: 5, gridRows: 6, shape: 'rect', colors: PALETTE3,
+        gridCols: 7, gridRows: 8, shape: 'rect', colors: PALETTE3,
         dynamic: true, gravity: false, rainbow: false, changing: false,
         timeLimit: 45, timeBonus: 0.8, targetCount: 30,
     },
@@ -72,7 +72,7 @@ const LEVELS: LevelConfig[] = [
         num: '1-2', theme: '五彩', keywords: '倒计时 · 原位刷新 · 五色',
         narrative: '颜色增至五种，难度升级。',
         outro: '彩虹泡泡加入了战场。',
-        gridCols: 6, gridRows: 7, shape: 'rect', colors: PALETTE5,
+        gridCols: 7, gridRows: 8, shape: 'rect', colors: PALETTE5,
         dynamic: true, gravity: false, rainbow: false, changing: false,
         timeLimit: 50, timeBonus: 0.8, targetCount: 42,
     },
@@ -80,7 +80,7 @@ const LEVELS: LevelConfig[] = [
         num: '1-3', theme: '彩虹', keywords: '倒计时 · 原位刷新 · 五色 · 彩虹泡泡',
         narrative: '彩虹泡泡能匹配任意颜色，助你完成限时挑战。',
         outro: '第一章通关！准备进入动态世界。',
-        gridCols: 6, gridRows: 7, shape: 'rect', colors: PALETTE5,
+        gridCols: 7, gridRows: 8, shape: 'rect', colors: PALETTE5,
         dynamic: true, gravity: false, rainbow: true, changing: false,
         timeLimit: 55, timeBonus: 0.8, targetCount: 42,
     },
@@ -112,7 +112,7 @@ const LEVELS: LevelConfig[] = [
         num: '2-1', theme: '重力', keywords: '重力补位 · 泡泡下落',
         narrative: '捏破后上方泡泡下落补位，棋盘持续变化。（第二章）',
         outro: '时间也开始追赶了。',
-        gridCols: 5, gridRows: 6, shape: 'rect', colors: PALETTE3,
+        gridCols: 7, gridRows: 8, shape: 'rect', colors: PALETTE3,
         dynamic: false, gravity: true, rainbow: false, changing: false,
         timeLimit: 0, timeBonus: 0, targetCount: 30,
     },
@@ -120,7 +120,7 @@ const LEVELS: LevelConfig[] = [
         num: '2-2', theme: '时空', keywords: '重力补位 · 倒计时',
         narrative: '空间在变化，时间在追赶。（空间 + 时间）',
         outro: '泡泡颜色开始变多了。',
-        gridCols: 6, gridRows: 7, shape: 'rect', colors: PALETTE3,
+        gridCols: 7, gridRows: 8, shape: 'rect', colors: PALETTE3,
         dynamic: false, gravity: true, rainbow: false, changing: false,
         timeLimit: 50, timeBonus: 0.8, targetCount: 42,
     },
@@ -128,7 +128,7 @@ const LEVELS: LevelConfig[] = [
         num: '2-3', theme: '五彩', keywords: '重力补位 · 倒计时 · 五色',
         narrative: '重力加五色，难度升级。',
         outro: '彩虹泡泡将降临动态棋盘。',
-        gridCols: 6, gridRows: 7, shape: 'rect', colors: PALETTE5,
+        gridCols: 7, gridRows: 8, shape: 'rect', colors: PALETTE5,
         dynamic: false, gravity: true, rainbow: false, changing: false,
         timeLimit: 55, timeBonus: 0.7, targetCount: 42,
     },
@@ -136,7 +136,7 @@ const LEVELS: LevelConfig[] = [
         num: '2-4', theme: '爆发', keywords: '重力补位 · 倒计时 · 五色 · 彩虹',
         narrative: '动态棋盘上的最终试炼。',
         outro: '第二章通关！全章完结，圆满落幕。',
-        gridCols: 7, gridRows: 7, shape: 'rect', colors: PALETTE5,
+        gridCols: 7, gridRows: 8, shape: 'rect', colors: PALETTE5,
         dynamic: false, gravity: true, rainbow: true, changing: false,
         timeLimit: 60, timeBonus: 0.7, targetCount: 49,
     },
@@ -180,12 +180,13 @@ interface SaveData {
     ch2: number[];            // 第二章（动态）已通关的全局关卡序号
     bestCombo: number;
     lastChapter: 0 | 1 | 2;   // 0=无 1=第一章 2=第二章（用于“继续游戏”）
+    intro: string[];          // 已经做过“首次出现”重点提示的特殊机制（全流程只提示一次）
 }
 
 const SAVE_KEY = 'bubblewrap_save_v1';
 
 function defaultSave(): SaveData {
-    return { version: 3, tutorialsDone: false, ch1: [], ch2: [], bestCombo: 0, lastChapter: 0 };
+    return { version: 3, tutorialsDone: false, ch1: [], ch2: [], bestCombo: 0, lastChapter: 0, intro: [] };
 }
 
 function chapterGroupOf(index: number): 'tutorial' | 'ch1' | 'ch2' {
@@ -238,6 +239,7 @@ function loadSave(): SaveData {
                     ch2: Array.isArray(d.ch2) ? remap(d.ch2) : [],
                     bestCombo: Number(d.bestCombo) || 0,
                     lastChapter: d.lastChapter === 1 || d.lastChapter === 2 ? d.lastChapter : 0,
+                    intro: Array.isArray(d.intro) ? d.intro.filter((x: any) => typeof x === 'string') : [],
                 };
             }
             // v1 旧档迁移：曾通关即视为教程完成，已通关关卡按分组归位
@@ -249,6 +251,7 @@ function loadSave(): SaveData {
                 ch2: old.filter((x: number) => x >= 5 && x <= 8).map((x: number) => x + 3),
                 bestCombo: Number(d.bestCombo) || 0,
                 lastChapter: 0,
+                intro: [],
             };
         }
     } catch { /* ignore */ }
@@ -328,14 +331,34 @@ export class GameManager extends Component {
     private timerLabel: Label = null!;
     private missLabel: Label = null!;
     private missDots: Graphics = null!;
-    private rainbowLabel: Label = null!;
+    private descLabel: Label = null!;
     private progressG: Graphics = null!;
+
+    // 特殊泡泡提示（首次出现时说明作用）+ 彩虹出现前的弹窗
+    private tipCard: Node = null!;
+    private tipLabel: Label = null!;
+    private tipQueue: string[] = [];
+    private tipTimer = 0;
+    private rainbowIntroShown = false;
+    // 特殊泡泡重点提示：整屏变暗 + 聚光灯圈住那颗泡泡，点一下才继续
+    private spotNode: Node = null!;
+    private spotHoleG: Graphics = null!;
+    private spotRing: Node = null!;
+    private spotTitle: Label = null!;
+    private spotSub: Label = null!;
+    private spotCard: Node = null!;
+    private spotQueue: { kind: string; text: string; sub: string }[] = [];
+    private spotActive = false;
+    private spotPulse = 0;
+    private spotTime = 0;
+    private spotAt = new Vec3(0, 0, 0);
 
     // 遮罩
     private overlay: Node = null!;
     private overlayCard: Node = null!;
     private overlayTitle: Label = null!;
     private overlayDesc: Label = null!;
+    private overlayBg: Graphics = null!;
     private btnA: Node = null!;
     private btnB: Node = null!;
     private labelA: Label = null!;
@@ -470,6 +493,32 @@ export class GameManager extends Component {
                         if (c && c.changing && !c.isPopped) c.cycleNext();
                     }
                 }
+            }
+            // 特殊泡泡说明条：逐帧驱动排队播放
+            if (this.tipTimer > 0) {
+                this.tipTimer -= dt;
+                if (this.tipTimer <= 0) this.hideTip();
+            } else if (this.playing && this.tipQueue.length > 0) {
+                try { this.showTip(this.tipQueue.shift()!); } catch (e) { this.cap('tip err', e); }
+            }
+            // 特殊泡泡重点提示：开场卡结束后逐个上（点一下继续）
+            if (!this.spotActive && this.playing && this.spotQueue.length > 0 && this.tipTimer <= 0) {
+                try {
+                    const item = this.spotQueue.shift()!;
+                    this.showSpotlight(item.kind, item.text, item.sub);
+                    this.markIntroSeen(item.kind);
+                } catch (e) {
+                    this.cap('spot err', e);
+                }
+            }
+            // 高亮光圈呼吸（逐帧驱动，不用 tween）
+            if (this.spotActive && this.spotRing && this.spotRing.isValid) {
+                this.spotPulse += dt * 3.4;
+                const s = 1 + 0.11 * (0.5 + 0.5 * Math.sin(this.spotPulse));
+                this.spotRing.setScale(s, s, 1);
+                // 看门狗：万一触摸事件没进来，也不能把关卡卡在暂停状态
+                this.spotTime += dt;
+                if (this.spotTime > 12) this.dismissSpotlight();
             }
             // 原位刷新兜底：某格击破超 0.45s 仍未补位（或被中断的动画留在透明态），直接整格复位
             if (this.playing) {
@@ -711,8 +760,9 @@ export class GameManager extends Component {
         this.snakeCells = cfg.snake ? this.makeSnakeCells(cfg) : [];
         this.buildQueue(cfg);
 
-        this.titleLabel.string = `${cfg.num} ${cfg.theme}`;
+        this.titleLabel.string = `${cfg.num} · ${cfg.theme}`;
         this.subtitleLabel.string = cfg.keywords;
+        this.descLabel.string = cfg.narrative;
         this.remainLabel.string = `剩余 ${cfg.targetCount}`;
         this.comboLabel.string = '';
         this.timerLabel.string = cfg.timeLimit > 0 ? `时间 ${cfg.timeLimit}` : '';
@@ -725,7 +775,7 @@ export class GameManager extends Component {
         if (cfg.changing && this.countChanging() < 1) this.ensureOneChanging();
         // 彩虹关：开局场上即有一个彩虹泡泡（同一时间仅一个）
         if (cfg.rainbow) this.spawnRainbow();
-        this.updateRainbowHint();
+        this.rainbowIntroShown = false;
         // 防卡关：开局当前目标色一定在场上
         this.ensureTargetColorAvailable();
         this.renderTargetBar();
@@ -771,6 +821,8 @@ export class GameManager extends Component {
         // 开场主题卡：衔接上一关
         this.showOverlay(`${cfg.num} · ${cfg.theme}`, `${cfg.keywords}\n${cfg.narrative}`, []);
         this.introTimer = 1.6;
+        // 特殊泡泡首次出现：说明条排在开场卡之后（showOverlay 会清空队列，必须放在其后）
+        this.queueSpecialTips(cfg);
     }
 
     /** 重置 = 重新开始当前关卡（场景里按钮绑定此方法） */
@@ -1396,9 +1448,9 @@ export class GameManager extends Component {
                     this.rainbowStreak = 0;
                 } else if (cfg.rainbow && !this.isRainbowActive()) {
                     this.rainbowStreak++;
-                    if (this.rainbowStreak >= RAINBOW_STREAK_NEED) this.spawnRainbow();
+                    // 不再显示“蓄力进度”，而是在彩虹泡泡即将出现前弹窗告知
+                    if (this.rainbowStreak >= RAINBOW_STREAK_NEED) this.queueRainbowIntro();
                 }
-                this.updateRainbowHint();
                 // 连锁泡泡：上下左右同色一起消除（不影响队列推进）
                 if (cfg.chain && !isRainbow) this.chainSameColorAdjacent(node, colorKey);
             } else {
@@ -1572,7 +1624,6 @@ export class GameManager extends Component {
             this.missLabel.color = this.mistakes >= 3 ? COLOR_WARN : COLOR_GRAY;
             this.drawMissDots(this.mistakes);
             this.rainbowStreak = 0;
-            this.updateRainbowHint();
             if (this.mistakes >= MISTAKE_LIMIT) this.failLevel();
         } catch (e) {
             this.cap('wrong err', e);
@@ -1621,27 +1672,85 @@ export class GameManager extends Component {
         target.getComponent(Bubble)!.setRainbow();
         this.rainbowNode = target;
         this.rainbowStreak = 0;
-        this.updateRainbowHint();
+        if (this.playing) this.showTip('彩虹泡泡出现了：可以当作任意目标色点破');
         // 彩虹转换可能吃掉最后一个目标色泡泡——补回
         this.ensureTargetColorAvailable();
     }
 
-    private updateRainbowHint() {
-        if (!this.rainbowLabel) return;
-        const cfg = LEVELS[this.currentLevel];
-        if (!cfg.rainbow) {
-            this.rainbowLabel.string = '';
+    /**
+     * 彩虹泡泡出现前的弹窗：暂停计时，说明机制，确认后再让它登场。
+     * 之后的每一轮直接出现，不再打断。
+     */
+    private queueRainbowIntro() {
+        if (this.rainbowIntroShown) {
+            this.spawnRainbow();
             return;
         }
-        if (this.isRainbowActive()) {
-            this.rainbowLabel.string = '彩虹泡泡出现了！点它可匹配任意颜色';
-            this.rainbowLabel.color = COLOR_PURPLE;
-        } else if (this.rainbowStreak > 0) {
-            this.rainbowLabel.string = `彩虹蓄力中 ${this.rainbowStreak}/${RAINBOW_STREAK_NEED}`;
-            this.rainbowLabel.color = COLOR_GRAY;
-        } else {
-            this.rainbowLabel.string = '';
+        this.rainbowIntroShown = true;
+        this.playing = false;
+        this.showOverlay('彩虹泡泡即将出现', `连续正确点击 ${RAINBOW_STREAK_NEED} 次，它就会再次登场。\n可以当作任意目标色点破。`, [
+            {
+                label: '知道了',
+                action: () => {
+                    this.playing = true;
+                    this.hideOverlay();
+                    this.spawnRainbow();
+                },
+            },
+        ], true);
+    }
+
+    // ---------------- 特殊泡泡提示 ----------------
+
+    /** 特殊泡泡首次出现时的说明条（一次提示一条，自动排队播放） */
+    private queueSpecialTips(cfg: LevelConfig) {
+        const seen = loadSave().intro || [];
+        const list: { kind: string; text: string; sub: string }[] = [];
+        // 全流程只做一次：第二/第三章再遇到就不再打断节奏
+        if (cfg.rainbow && seen.indexOf('rainbow') < 0) list.push({ kind: 'rainbow', text: '彩虹泡泡', sub: '可以当作任意目标色点破' });
+        if (cfg.chain && seen.indexOf('chain') < 0) list.push({ kind: 'chain', text: '连锁泡泡', sub: '点中它，上下左右同色的泡泡会一起消失' });
+        if (cfg.locked && seen.indexOf('locked') < 0) list.push({ kind: 'locked', text: '冰封泡泡', sub: '点不动，先炸掉它旁边任意一个泡泡即可解冻' });
+        if (cfg.changing && seen.indexOf('changing') < 0) list.push({ kind: 'changing', text: '变色泡泡', sub: '颜色不停变化，变成目标色时才能点破' });
+        this.spotQueue = list;
+        this.tipTimer = 0;
+    }
+
+    /** 记录某种特殊机制已经做过首次重点提示 */
+    private markIntroSeen(kind: string) {
+        try {
+            const save = loadSave();
+            const list = Array.isArray(save.intro) ? save.intro : [];
+            if (list.indexOf(kind) >= 0) return;
+            list.push(kind);
+            save.intro = list;
+            writeSave(save);
+        } catch (e) {
+            this.cap('intro save err', e);
         }
+    }
+
+    private showTip(text: string, dur = 3.6) {
+        if (!this.tipCard || !this.tipCard.isValid) return;
+        this.tipLabel.string = text;
+        this.tipCard.active = true;
+        const op = this.tipCard.getComponent(UIOpacity)!;
+        Tween.stopAllByTarget(op);
+        op.opacity = 0;
+        tween(op).to(0.18, { opacity: 255 }).start();
+        this.tipTimer = dur;
+    }
+
+    private hideTip() {
+        if (!this.tipCard || !this.tipCard.isValid) return;
+        const op = this.tipCard.getComponent(UIOpacity)!;
+        Tween.stopAllByTarget(op);
+        tween(op)
+            .to(0.2, { opacity: 0 })
+            .call(() => {
+                // 期间若又来了新提示，不要把它关掉
+                if (this.tipCard.isValid && this.tipTimer <= 0) this.tipCard.active = false;
+            })
+            .start();
     }
 
     // ---------------- 通关 / 时间到 / 存档 ----------------
@@ -1908,64 +2017,71 @@ export class GameManager extends Component {
     // ---------------- HUD / 遮罩 ----------------
 
     private buildHud() {
-        const dark = new Color(80, 110, 135, 255);
-        const gray = new Color(145, 165, 185, 255);
+        // 排版分三块：
+        //  顶部中央 = 关卡名 / 目标泡泡 / 剩余   |  右上 = 计时 + 失误  |  左上 = 两个竖排按钮
+        //  页面最底部 = 关卡描述（关键词 + 叙事）
+        const ink = new Color(58, 86, 112, 255);       // 主文字
+        const gray = new Color(138, 160, 182, 255);     // 次级文字
+        const faint = new Color(168, 186, 204, 255);    // 描述文字
 
-        // 左上：关卡名；右上：计时；中央：当前目标
-        this.titleLabel = this.makeLabel('', 28, dark, new Vec3(-220, 569, 0));
-        this.titleLabel.node.getComponent(UITransform)!.setContentSize(360, 40);
-        this.titleLabel.horizontalAlign = Label.HorizontalAlign.LEFT;
-        this.subtitleLabel = this.makeLabel('', 20, gray, new Vec3(-220, 528, 0));
-        this.subtitleLabel.node.getComponent(UITransform)!.setContentSize(360, 30);
-        this.subtitleLabel.horizontalAlign = Label.HorizontalAlign.LEFT;
-        this.subtitleLabel.fontSize = 18;
-        this.remainLabel = this.makeLabel('', 18, new Color(145, 165, 185, 255), new Vec3(0, 522, 0));
-        this.remainLabel.node.getComponent(UITransform)!.setContentSize(260, 34);
-        this.comboLabel = this.makeLabel('', 44, new Color(255, 110, 150, 255), new Vec3(0, 410, 0));
-        this.timerLabel = this.makeLabel('', 26, dark, new Vec3(225, 588, 0));
-        this.timerLabel.node.getComponent(UITransform)!.setContentSize(240, 40);
+        // ---- 顶部中央：关卡名（最大字号，加粗）----
+        this.titleLabel = this.makeLabel('', 34, ink, new Vec3(0, 616, 0));
+        this.titleLabel.node.getComponent(UITransform)!.setContentSize(420, 46);
+        this.titleLabel.horizontalAlign = Label.HorizontalAlign.CENTER;
+        this.titleLabel.isBold = true;
+
+        // ---- “目标”提示 + 单个目标圆点 + 剩余 ----
+        this.targetHint = this.makeLabel('目标', 26, gray, new Vec3(0, 566, 0));
+        this.targetBar = new Node('TargetBar');
+        this.targetBar.layer = Layers.Enum.UI_2D;
+        this.targetBar.addComponent(UITransform).setContentSize(120, 120);
+        this.targetBar.setPosition(0, 516, 0);
+        this.node.addChild(this.targetBar);
+        this.targetStrip = this.targetBar;
+        this.remainLabel = this.makeLabel('', 28, gray, new Vec3(0, 456, 0));
+        this.remainLabel.node.getComponent(UITransform)!.setContentSize(300, 40);
+        this.comboLabel = this.makeLabel('', 46, new Color(255, 110, 150, 255), new Vec3(0, 396, 0));
+        this.comboLabel.isBold = true;
+
+        // ---- 右上：计时（大字加粗）+ 失误统计 ----
+        this.timerLabel = this.makeLabel('', 38, ink, new Vec3(196, 616, 0));
+        this.timerLabel.node.getComponent(UITransform)!.setContentSize(320, 52);
         this.timerLabel.horizontalAlign = Label.HorizontalAlign.RIGHT;
-
-        // 失误计数（右上，计时下方；≥3 次变红警示）
-        // 失误：文字在上、点阵在下（已失误=红点，未失误=浅灰点）
-        this.missLabel = this.makeLabel('失误', 18, COLOR_GRAY, new Vec3(300, 552, 0));
-        this.missLabel.node.getComponent(UITransform)!.setContentSize(160, 28);
+        this.timerLabel.isBold = true;
+        this.missLabel = this.makeLabel('失误', 26, COLOR_GRAY, new Vec3(300, 566, 0));
+        this.missLabel.node.getComponent(UITransform)!.setContentSize(180, 36);
         this.missLabel.horizontalAlign = Label.HorizontalAlign.CENTER;
         const dots = new Node('MissDots');
         dots.layer = Layers.Enum.UI_2D;
         dots.addComponent(UITransform).setContentSize(120, 24);
-        dots.setPosition(0, 523, 0);
+        dots.setPosition(300, 530, 0);
         this.node.addChild(dots);
         this.missDots = dots.addComponent(Graphics);
         this.drawMissDots(0);
-        // 彩虹泡泡提示（棋盘上方）
-        this.rainbowLabel = this.makeLabel('', 22, COLOR_PURPLE, new Vec3(0, 428, 0));
-        // 异常提示（屏幕底部，出现异常时显示，便于真机排查）
-        this.errLabel = this.makeLabel('', 15, COLOR_WARN, new Vec3(0, -596, 0));
+
+        // ---- 页面最底部：关卡描述 ----
+        this.subtitleLabel = this.makeLabel('', 24, gray, new Vec3(0, -524, 0));
+        this.subtitleLabel.node.getComponent(UITransform)!.setContentSize(660, 34);
+        this.descLabel = this.makeLabel('', 20, faint, new Vec3(0, -564, 0));
+        this.descLabel.node.getComponent(UITransform)!.setContentSize(660, 32);
+        // 异常提示（屏幕最底部，出现异常时显示，便于真机排查）
+        this.errLabel = this.makeLabel('', 15, COLOR_WARN, new Vec3(0, -616, 0));
         this.errLabel.node.getComponent(UITransform)!.setContentSize(680, 24);
 
-        // “目标”提示字 + 单个大目标圆点
-        this.targetHint = this.makeLabel('目标', 18, gray, new Vec3(0, 620, 0));
-        this.targetBar = new Node('TargetBar');
-        this.targetBar.layer = Layers.Enum.UI_2D;
-        this.targetBar.addComponent(UITransform).setContentSize(120, 120);
-        this.targetBar.setPosition(0, 572, 0);
-        this.node.addChild(this.targetBar);
-        this.targetStrip = this.targetBar;
         this.hudNodes = [
-            this.titleLabel.node, this.subtitleLabel.node, this.remainLabel.node,
-            this.comboLabel.node, this.timerLabel.node, this.missLabel.node,
-            this.missDots.node,
-            this.rainbowLabel.node, this.targetHint.node, this.targetBar,
+            this.titleLabel.node, this.subtitleLabel.node, this.descLabel.node,
+            this.remainLabel.node, this.comboLabel.node, this.timerLabel.node,
+            this.missLabel.node, this.missDots.node,
+            this.targetHint.node, this.targetBar,
         ];
 
-        // 左上角关卡内按钮：重新开始 + 返回主菜单（仅游戏进行中显示）
-        this.restartBtn = this.buildCornerButton('重新开始', new Vec3(-280, 618, 0));
+        // 左上角关卡内按钮：重新开始 + 返回主界面（竖排、放大）
+        this.restartBtn = this.buildCornerButton('重新开始', new Vec3(-258, 578, 0));
         this.restartBtn.on(Button.EventType.CLICK, () => {
             if (!this.restartBtn.active) return;
             this.gotoLevel(this.currentLevel);
         }, this);
-        this.homeBtn = this.buildCornerButton('返回主菜单', new Vec3(-140, 618, 0), 'violet');
+        this.homeBtn = this.buildCornerButton('返回主界面', new Vec3(-258, 506, 0), 'violet');
         this.homeBtn.on(Button.EventType.CLICK, () => {
             if (!this.homeBtn.active) return;
             this.showTitle();
@@ -1974,7 +2090,195 @@ export class GameManager extends Component {
         this.restartBtn.active = false;
         this.homeBtn.active = false;
 
+        this.buildTipCard();
         this.buildOverlay();
+        this.buildSpotlight();
+    }
+
+    /**
+     * 特殊泡泡重点提示：整屏压暗 + 在目标泡泡处挖一个亮洞 + 呼吸光圈 + 说明文字。
+     * 提示期间不接受棋盘操作，点一下任意位置继续（点遮罩不会误爆泡泡）。
+     */
+    private buildSpotlight() {
+        const n = new Node('Spotlight');
+        n.layer = Layers.Enum.UI_2D;
+        this.spotNode = n;
+        n.addComponent(UITransform).setContentSize(720, 1280);
+        n.setPosition(0, 0, 20);
+        this.node.addChild(n);
+        n.addComponent(BlockInputEvents);
+        n.on(Node.EventType.TOUCH_END, (e: EventTouch) => this.onSpotTap(e), this);
+
+        // 变暗层：用扇形拼出一个带圆洞的“环形暗幕”（不用遮罩，避免不同平台差异）
+        const dim = new Node('Dim');
+        dim.layer = Layers.Enum.UI_2D;
+        dim.addComponent(UITransform).setContentSize(720, 1280);
+        this.spotHoleG = dim.addComponent(Graphics);
+        n.addChild(dim);
+
+        // 呼吸光圈（在遮罩之上，保证可见）
+        const ring = new Node('Ring');
+        ring.layer = Layers.Enum.UI_2D;
+        ring.addComponent(UITransform).setContentSize(160, 160);
+        const rg = ring.addComponent(Graphics);
+        rg.lineWidth = 4;
+        rg.strokeColor = new Color(255, 255, 255, 235);
+        rg.circle(0, 0, 46);
+        rg.stroke();
+        rg.lineWidth = 2;
+        rg.strokeColor = new Color(255, 255, 255, 130);
+        rg.circle(0, 0, 54);
+        rg.stroke();
+        n.addChild(ring);
+        this.spotRing = ring;
+
+        // 说明卡
+        const card = new Node('SpotCard');
+        card.layer = Layers.Enum.UI_2D;
+        card.addComponent(UITransform).setContentSize(640, 150);
+        n.addChild(card);
+        const cg = card.addComponent(Graphics);
+        cg.fillColor = new Color(255, 255, 255, 246);
+        cg.roundRect(-320, -75, 640, 150, 26);
+        cg.fill();
+        cg.lineWidth = 2;
+        cg.strokeColor = new Color(206, 226, 249, 255);
+        cg.roundRect(-320, -75, 640, 150, 26);
+        cg.stroke();
+        this.spotTitle = this.makeLabelOn(card, '', 26, new Color(46, 74, 102, 255), new Vec3(0, 26, 0));
+        this.spotTitle.isBold = true;
+        this.spotTitle.node.getComponent(UITransform)!.setContentSize(600, 40);
+        this.spotSub = this.makeLabelOn(card, '', 19, new Color(140, 162, 184, 255), new Vec3(0, -26, 0));
+        this.spotSub.node.getComponent(UITransform)!.setContentSize(600, 68);
+        this.spotSub.lineHeight = 24;
+        this.spotSub.node.setPosition(0, -26, 0);
+        this.spotCard = card;
+
+        n.active = false;
+    }
+
+    /** 找到某种特殊泡泡在场上的位置（用于聚光） */
+    private findSpecialTarget(kind: string): Vec3 | null {
+        const pick = (fn: (c: Bubble) => boolean) => {
+            for (const b of this.bubbleList) {
+                if (!b.isValid) continue;
+                const c = b.getComponent(Bubble);
+                if (c && !c.isPopped && fn(c)) return b.position.clone();
+            }
+            return null;
+        };
+        if (kind === 'rainbow') {
+            const n = this.rainbowNode;
+            return n && n.isValid ? n.position.clone() : null;
+        }
+        if (kind === 'locked') return pick((c) => c.locked);
+        if (kind === 'changing') return pick((c) => c.changing);
+        if (kind === 'chain') {
+            for (const b of this.bubbleList) {
+                if (!b.isValid) continue;
+                const c = b.getComponent(Bubble);
+                if (!c || c.isPopped || c.locked || c.changing || c.rainbow) continue;
+                const near = this.bubbleList.some((o) => {
+                    if (o === b || !o.isValid) return false;
+                    const d = o.getComponent(Bubble);
+                    return !!d && !d.isPopped && !d.locked && d.color === c.color && this.isNeighborNode(b, o);
+                });
+                if (near) return b.position.clone();
+            }
+        }
+        return null;
+    }
+
+    private showSpotlight(kind: string, text: string, sub: string) {
+        const pos = this.findSpecialTarget(kind);
+        const at = pos || new Vec3(0, 0, 0);
+        this.spotAt = at.clone();
+        this.drawSpotDim(at.x, at.y, 62);
+        this.spotRing.setPosition(at.x, at.y, 0);
+        this.spotTitle.string = text;
+        this.spotSub.string = `${sub}\n点击任意处继续`;
+        // 说明卡放在高亮泡泡的另一侧，避免压住它
+        this.spotCard.setPosition(0, at.y > 0 ? -470 : 430, 0);
+        this.spotNode.active = true;
+        this.spotActive = true;
+        this.playing = false;
+        this.spotPulse = 0;
+        this.spotTime = 0;
+        this.spotRing.setScale(1, 1, 1);
+    }
+
+    /** 点高亮泡泡：既关掉提示，也直接把那颗泡泡点掉（不用点两次） */
+    private onSpotTap(e?: EventTouch) {
+        try {
+            let inside = false;
+            if (e && this.spotAt) {
+                const uiPos: Vec2 = e.getUILocation();
+                const local = this.bubbleContainer
+                    .getComponent(UITransform)!
+                    .convertToNodeSpaceAR(new Vec3(uiPos.x, uiPos.y, 0));
+                inside = Math.hypot(local.x - this.spotAt.x, local.y - this.spotAt.y) <= 56;
+            }
+            this.dismissSpotlight();
+            if (inside) this.onTouch(e!);
+        } catch (err) {
+            this.cap('spot tap err', err);
+        }
+    }
+
+    private dismissSpotlight() {
+        try {
+            if (!this.spotActive) return;
+            this.spotActive = false;
+            if (this.spotNode && this.spotNode.isValid) this.spotNode.active = false;
+            this.playing = true;
+            this.spotTime = 0;
+        } catch (e) {
+            this.cap('spot dismiss err', e);
+        }
+    }
+
+    /** 画一层“带圆洞的暗幕”：48 个扇形拼成环形，保证洞是真的透明 */
+    private drawSpotDim(cx: number, cy: number, holeR: number) {
+        const g = this.spotHoleG;
+        if (!g) return;
+        g.clear();
+        g.fillColor = new Color(26, 42, 60, 158);
+        const N = 48;
+        const OUT = 900;
+        for (let i = 0; i < N; i++) {
+            const a0 = (i / N) * Math.PI * 2;
+            const a1 = ((i + 1) / N) * Math.PI * 2;
+            g.moveTo(cx + Math.cos(a0) * holeR, cy + Math.sin(a0) * holeR);
+            g.lineTo(cx + Math.cos(a1) * holeR, cy + Math.sin(a1) * holeR);
+            g.lineTo(cx + Math.cos(a1) * OUT, cy + Math.sin(a1) * OUT);
+            g.lineTo(cx + Math.cos(a0) * OUT, cy + Math.sin(a0) * OUT);
+            g.close();
+        }
+        g.fill();
+    }
+
+    /** 特殊泡泡说明条：棋盘下方一张会淡入淡出的白色小卡片 */
+    private buildTipCard() {
+        const card = new Node('TipCard');
+        card.layer = Layers.Enum.UI_2D;
+        card.addComponent(UITransform).setContentSize(620, 84);
+        card.setPosition(0, -456, 0);
+        this.node.addChild(card);
+        const g = card.addComponent(Graphics);
+        g.fillColor = new Color(255, 255, 255, 238);
+        g.roundRect(-310, -42, 620, 84, 22);
+        g.fill();
+        g.lineWidth = 2;
+        g.strokeColor = new Color(200, 224, 250, 255);
+        g.roundRect(-310, -42, 620, 84, 22);
+        g.stroke();
+        card.addComponent(UIOpacity);
+        const lbl = this.makeLabelOn(card, '', 21, new Color(52, 78, 104, 255), new Vec3(0, 0, 0));
+        lbl.node.getComponent(UITransform)!.setContentSize(580, 72);
+        lbl.lineHeight = 27;
+        this.tipLabel = lbl;
+        this.tipCard = card;
+        card.active = false;
     }
 
     private setHudVisible(on: boolean) {
@@ -2002,7 +2306,7 @@ export class GameManager extends Component {
         for (let i = 0; i < MISTAKE_LIMIT; i++) {
             g.fillColor = i < used ? COLOR_WARN : new Color(204, 216, 231, 255);
             // 点阵居中在“失误”文字正下方
-            g.circle(300 + (i - 2) * 15, 0, 5.5);
+            g.circle((i - 2) * 19, 0, 7);
             g.fill();
         }
     }
@@ -2011,7 +2315,7 @@ export class GameManager extends Component {
     private buildCornerButton(text: string, pos: Vec3, tint: 'blue' | 'violet' = 'blue'): Node {
         const node = new Node('CornerBtn');
         node.layer = Layers.Enum.UI_2D;
-        const w = 118, h = 34;
+        const w = 176, h = 56;
         node.addComponent(UITransform).setContentSize(w, h);
         node.setPosition(pos);
         this.node.addChild(node);
@@ -2029,8 +2333,9 @@ export class GameManager extends Component {
         node.addChild(lbl);
         const label = lbl.addComponent(Label);
         label.string = text;
-        label.fontSize = 16;
-        label.lineHeight = 16;
+        label.fontSize = 24;
+        label.lineHeight = 24;
+        label.isBold = true;
         label.color = textColor;
         label.horizontalAlign = Label.HorizontalAlign.CENTER;
         label.verticalAlign = Label.VerticalAlign.CENTER;
@@ -2054,22 +2359,27 @@ export class GameManager extends Component {
     }
 
     /** 提示/结算页的卡片底：on=false 时只清空（用于选关列表页） */
-    private drawOverlayCard(on: boolean) {
+    private drawOverlayCard(on: boolean, compact = false) {
         const cg = this.overlayCard.getComponent(Graphics)!;
         cg.clear();
         if (!on) return;
+        const W = compact ? 360 : 540;
+        const H = compact ? 190 : 560;
+        const R = compact ? 22 : 36;
         cg.fillColor = new Color(88, 118, 150, 30);
-        cg.roundRect(-270, -283, 540, 560, 36);
+        cg.roundRect(-W / 2, -H / 2 - 3, W, H, R);
         cg.fill();
         cg.fillColor = new Color(255, 255, 255, 255);
-        cg.roundRect(-270, -280, 540, 560, 36);
+        cg.roundRect(-W / 2, -H / 2, W, H, R);
         cg.fill();
         cg.lineWidth = 1.5;
         cg.strokeColor = new Color(227, 238, 249, 255);
-        cg.roundRect(-270, -280, 540, 560, 36);
+        cg.roundRect(-W / 2, -H / 2, W, H, R);
         cg.stroke();
+        // 小窗不放顶端蓝色装饰线（更轻、不抢视线）
+        if (compact) return;
         cg.fillColor = new Color(59, 123, 245, 255);
-        cg.roundRect(-30, 218, 60, 6, 3);
+        cg.roundRect(-30, H / 2 - 62, 60, 6, 3);
         cg.fill();
     }
 
@@ -2111,6 +2421,7 @@ export class GameManager extends Component {
         this.node.addChild(this.overlay);
         this.overlay.addComponent(BlockInputEvents);
         const g = this.overlay.addComponent(Graphics);
+        this.overlayBg = g;
         g.fillColor = new Color(255, 255, 255, 236);
         g.rect(-360, -640, 720, 1280);
         g.fill();
@@ -2247,16 +2558,56 @@ export class GameManager extends Component {
         }
     }
 
-    private showOverlay(title: string, desc: string, buttons: { label: string; action: () => void }[]) {
-        this.drawOverlayCard(true);
+    private showOverlay(title: string, desc: string, buttons: { label: string; action: () => void }[], compact = false) {
+        this.drawOverlayCard(true, compact);
+        // 小窗模式用半透明深色背景，弱化“换页”观感
+        if (this.overlayBg) {
+            this.overlayBg.clear();
+            this.overlayBg.fillColor = compact ? new Color(24, 38, 56, 96) : new Color(255, 255, 255, 236);
+            this.overlayBg.rect(-360, -640, 720, 1280);
+            this.overlayBg.fill();
+        }
         this.setHudVisible(false);
+        // 说明条不进 hudNodes（避免被 setHudVisible 强制点亮），这里单独收起
+        if (this.tipCard && this.tipCard.isValid) this.tipCard.active = false;
+        this.tipQueue.length = 0;
+        this.tipTimer = 0;
+        // 重点提示同样收起（避免盖在弹层之上）
+        this.spotQueue.length = 0;
+        if (this.spotActive) {
+            this.spotActive = false;
+            if (this.spotNode && this.spotNode.isValid) this.spotNode.active = false;
+            Tween.stopAllByTarget(this.spotRing);
+        }
         this.overlayTitle.string = title;
         this.overlayDesc.string = desc;
-        // 普通弹层：标题/说明回到卡片内
-        this.overlayTitle.node.setPosition(0, 180, 0);
-        this.overlayDesc.node.setPosition(0, 108, 0);
-        this.overlayTitle.fontSize = 48;
-        this.overlayDesc.fontSize = 24;
+        // 普通弹层 / 小窗模式：标题、说明、按钮各自归位
+        const card = this.overlayCard.getComponent(UITransform)!;
+        if (compact) {
+            card.setContentSize(360, 190);
+            this.overlayCard.setPosition(0, 20, 0);
+            this.overlayTitle.node.setPosition(0, 56, 0);
+            this.overlayTitle.fontSize = 24;
+            this.overlayDesc.node.setPosition(0, 8, 0);
+            this.overlayDesc.fontSize = 16;
+            this.overlayDesc.lineHeight = 22;
+            this.overlayDesc.node.getComponent(UITransform)!.setContentSize(320, 60);
+            this.btnA.setPosition(0, -56, 0);
+            this.btnA.setScale(0.62, 0.62, 1);
+            this.btnB.setPosition(0, -170, 0);
+        } else {
+            card.setContentSize(540, 560);
+            this.overlayCard.setPosition(0, 20, 0);
+            this.overlayTitle.node.setPosition(0, 180, 0);
+            this.overlayDesc.node.setPosition(0, 108, 0);
+            this.overlayTitle.fontSize = 48;
+            this.overlayDesc.fontSize = 24;
+            this.overlayDesc.lineHeight = 38;
+            this.overlayDesc.node.getComponent(UITransform)!.setContentSize(620, 120);
+            this.btnA.setPosition(0, 10, 0);
+            this.btnA.setScale(1, 1, 1);
+            this.btnB.setPosition(0, -80, 0);
+        }
         // 遮罩显示时隐藏关卡内按钮
         this.restartBtn.active = false;
         this.homeBtn.active = false;
