@@ -334,12 +334,11 @@ export class GameManager extends Component {
     private descLabel: Label = null!;
     private progressG: Graphics = null!;
 
-    // 特殊泡泡提示（首次出现时说明作用）+ 彩虹出现前的弹窗
+    // 特殊泡泡提示（首次出现时说明作用）+ 彩虹出现前的轻提示
     private tipCard: Node = null!;
     private tipLabel: Label = null!;
     private tipQueue: string[] = [];
     private tipTimer = 0;
-    private rainbowIntroShown = false;
     // 特殊泡泡重点提示：整屏变暗 + 聚光灯圈住那颗泡泡，点一下才继续
     private spotNode: Node = null!;
     private spotHoleG: Graphics = null!;
@@ -775,7 +774,6 @@ export class GameManager extends Component {
         if (cfg.changing && this.countChanging() < 1) this.ensureOneChanging();
         // 彩虹关：开局场上即有一个彩虹泡泡（同一时间仅一个）
         if (cfg.rainbow) this.spawnRainbow();
-        this.rainbowIntroShown = false;
         // 防卡关：开局当前目标色一定在场上
         this.ensureTargetColorAvailable();
         this.renderTargetBar();
@@ -1448,7 +1446,7 @@ export class GameManager extends Component {
                     this.rainbowStreak = 0;
                 } else if (cfg.rainbow && !this.isRainbowActive()) {
                     this.rainbowStreak++;
-                    // 不再显示“蓄力进度”，而是在彩虹泡泡即将出现前弹窗告知
+                    // 不显示“蓄力进度”，彩虹即将出现时仅轻提示 1 秒，不打断游戏
                     if (this.rainbowStreak >= RAINBOW_STREAK_NEED) this.queueRainbowIntro();
                 }
                 // 连锁泡泡：上下左右同色一起消除（不影响队列推进）
@@ -1672,32 +1670,18 @@ export class GameManager extends Component {
         target.getComponent(Bubble)!.setRainbow();
         this.rainbowNode = target;
         this.rainbowStreak = 0;
-        if (this.playing) this.showTip('彩虹泡泡出现了：可以当作任意目标色点破');
+        // 登场提示统一由 queueRainbowIntro 负责（开局登场不打断节奏）
         // 彩虹转换可能吃掉最后一个目标色泡泡——补回
         this.ensureTargetColorAvailable();
     }
 
     /**
-     * 彩虹泡泡出现前的弹窗：暂停计时，说明机制，确认后再让它登场。
-     * 之后的每一轮直接出现，不再打断。
+     * 彩虹泡泡登场提示：不打断游戏、不弹确认框，
+     * 只显示 1 秒轻提示，同时让它立即登场。
      */
     private queueRainbowIntro() {
-        if (this.rainbowIntroShown) {
-            this.spawnRainbow();
-            return;
-        }
-        this.rainbowIntroShown = true;
-        this.playing = false;
-        this.showOverlay('彩虹泡泡即将出现', `连续正确点击 ${RAINBOW_STREAK_NEED} 次，它就会再次登场。\n可以当作任意目标色点破。`, [
-            {
-                label: '知道了',
-                action: () => {
-                    this.playing = true;
-                    this.hideOverlay();
-                    this.spawnRainbow();
-                },
-            },
-        ], true);
+        this.spawnRainbow();
+        this.showTip('彩虹泡泡出现了：可以当作任意目标色点破', 1);
     }
 
     // ---------------- 特殊泡泡提示 ----------------
