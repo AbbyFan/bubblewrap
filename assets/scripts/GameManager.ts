@@ -45,121 +45,121 @@ const PALETTE5 = ['red', 'yellow', 'blue', 'green', 'violet'];
 const PALETTE7 = ['red', 'orange', 'yellow', 'green', 'cyan', 'blue', 'violet'];
 const LEVELS: LevelConfig[] = [
     {
-        num: '教学1', theme: '认色', keywords: '红黄蓝 · 静态棋盘 · 颜色队列',
-        narrative: '在整齐的泡泡纸中，寻找指定颜色。',
-        outro: '棋盘开始变化——新的泡泡会不断补上。',
+        num: 'T1', theme: 'Colors', keywords: 'Red Yellow Blue · Static board · Color queue',
+        narrative: 'Find the required colors in the neat bubble sheet.',
+        outro: 'The board is alive now — new bubbles keep coming.',
         gridCols: 3, gridRows: 4, shape: 'rect', colors: PALETTE3,
         dynamic: false, gravity: false, rainbow: false, changing: false,
         timeLimit: 0, timeBonus: 0, targetCount: 12,
     },
     {
-        num: '教学2', theme: '流动', keywords: '动态刷新 · 红黄蓝 · 持续寻找',
-        narrative: '每捏破一个，就会有新的泡泡补上。',
-        outro: '泡泡在流动了——现在，时间开始计时。',
+        num: 'T2', theme: 'Flow', keywords: 'Live refill · Red Yellow Blue · Keep popping',
+        narrative: 'Every bubble you pop is replaced by a new one.',
+        outro: 'The bubbles are flowing — and now the clock starts.',
         gridCols: 4, gridRows: 5, shape: 'rect', colors: PALETTE3,
         dynamic: true, gravity: false, rainbow: false, changing: false,
         timeLimit: 0, timeBonus: 0, targetCount: 20,
     },
     {
-        num: '1-1', theme: '限时', keywords: '倒计时 · 原位动态刷新',
-        narrative: '在有限时间里，尽可能完成颜色队列。（第一章）',
-        outro: '颜色变多了——注意分辨五色泡泡。',
+        num: '1-1', theme: 'Timed', keywords: 'Countdown · Live refill',
+        narrative: 'Finish the color queue before time runs out. (Chapter 1)',
+        outro: 'More colors — learn to tell the five apart.',
         gridCols: 7, gridRows: 8, shape: 'rect', colors: PALETTE3,
         dynamic: true, gravity: false, rainbow: false, changing: false,
         timeLimit: 45, timeBonus: 0.8, targetCount: 30,
     },
     {
-        num: '1-2', theme: '五彩', keywords: '倒计时 · 原位刷新 · 五色',
-        narrative: '颜色增至五种，难度升级。',
-        outro: '彩虹泡泡加入了战场。',
+        num: '1-2', theme: 'Multicolor', keywords: 'Countdown · Live refill · Five colors',
+        narrative: 'Five colors now — stay sharp.',
+        outro: 'Rainbow bubbles join the field.',
         gridCols: 7, gridRows: 8, shape: 'rect', colors: PALETTE5,
         dynamic: true, gravity: false, rainbow: false, changing: false,
         timeLimit: 50, timeBonus: 0.8, targetCount: 42,
     },
     {
-        num: '1-3', theme: '彩虹', keywords: '倒计时 · 原位刷新 · 五色 · 彩虹泡泡',
-        narrative: '彩虹泡泡能匹配任意颜色，助你完成限时挑战。',
-        outro: '第一章通关！准备进入动态世界。',
+        num: '1-3', theme: 'Rainbow', keywords: 'Countdown · Live refill · Five colors · Rainbow',
+        narrative: 'Rainbow bubbles match any color to help you beat the clock.',
+        outro: 'Chapter 1 complete! Get ready for the dynamic world.',
         gridCols: 7, gridRows: 8, shape: 'rect', colors: PALETTE5,
         dynamic: true, gravity: false, rainbow: true, changing: false,
         timeLimit: 55, timeBonus: 0.8, targetCount: 42,
     },
     {
-        num: '1-4', theme: '七色', keywords: '倒计时 · 原位刷新 · 七色 · 大面积',
-        narrative: '七种颜色铺满大棋盘，考验眼力与手速。',
-        outro: '新的固定机制即将登场。',
+        num: '1-4', theme: 'Seven Colors', keywords: 'Countdown · Live refill · Seven colors · Big board',
+        narrative: 'Seven colors fill the big board — test your eyes and speed.',
+        outro: 'A new mechanic is about to appear.',
         gridCols: 7, gridRows: 8, shape: 'rect', colors: PALETTE7,
         dynamic: true, gravity: false, rainbow: false, changing: false,
         timeLimit: 60, timeBonus: 0.6, targetCount: 56,
     },
     {
-        num: '1-5', theme: '连锁', keywords: '倒计时 · 七色 · 大面积 · 连锁泡泡',
-        narrative: '点中一个，上下左右的同色泡泡会一起消除。',
-        outro: '连锁之外，还有被锁住的泡泡。',
+        num: '1-5', theme: 'Chain', keywords: 'Countdown · Seven colors · Big board · Chain',
+        narrative: 'Pop one and all adjacent same-color bubbles burst together.',
+        outro: 'Beyond chains, frozen bubbles await.',
         gridCols: 7, gridRows: 8, shape: 'rect', colors: PALETTE7,
         dynamic: true, gravity: false, rainbow: false, changing: false, chain: true,
         timeLimit: 60, timeBonus: 0.6, targetCount: 56,
     },
     {
-        num: '1-6', theme: '锁定', keywords: '倒计时 · 七色 · 连锁 · 锁定泡泡',
-        narrative: '锁定泡泡需先炸掉它周围任意一个泡泡才能解锁。',
-        outro: '第一章通关！准备进入动态世界。',
+        num: '1-6', theme: 'Frozen', keywords: 'Countdown · Seven colors · Chain · Frozen',
+        narrative: 'Frozen bubbles thaw when any neighbor pops first.',
+        outro: 'Chapter 1 complete! Get ready for the dynamic world.',
         gridCols: 7, gridRows: 8, shape: 'rect', colors: PALETTE7,
         dynamic: true, gravity: false, rainbow: false, changing: false, chain: true, locked: true,
         timeLimit: 65, timeBonus: 0.6, targetCount: 56,
     },
     {
-        num: '2-1', theme: '重力', keywords: '重力补位 · 泡泡下落',
-        narrative: '捏破后上方泡泡下落补位，棋盘持续变化。（第二章）',
-        outro: '时间也开始追赶了。',
+        num: '2-1', theme: 'Gravity', keywords: 'Gravity refill · Bubbles fall',
+        narrative: 'Bubbles fall to fill gaps — the board keeps shifting. (Chapter 2)',
+        outro: 'Now time is chasing you too.',
         gridCols: 7, gridRows: 8, shape: 'rect', colors: PALETTE3,
         dynamic: false, gravity: true, rainbow: false, changing: false,
         timeLimit: 0, timeBonus: 0, targetCount: 30,
     },
     {
-        num: '2-2', theme: '时空', keywords: '重力补位 · 倒计时',
-        narrative: '空间在变化，时间在追赶。（空间 + 时间）',
-        outro: '泡泡颜色开始变多了。',
+        num: '2-2', theme: 'Time & Space', keywords: 'Gravity refill · Countdown',
+        narrative: 'Space shifts while time chases you. (Space + Time)',
+        outro: 'The palette is growing.',
         gridCols: 7, gridRows: 8, shape: 'rect', colors: PALETTE3,
         dynamic: false, gravity: true, rainbow: false, changing: false,
         timeLimit: 50, timeBonus: 0.8, targetCount: 42,
     },
     {
-        num: '2-3', theme: '五彩', keywords: '重力补位 · 倒计时 · 五色',
-        narrative: '重力加五色，难度升级。',
-        outro: '彩虹泡泡将降临动态棋盘。',
+        num: '2-3', theme: 'Multicolor', keywords: 'Gravity refill · Countdown · Five colors',
+        narrative: 'Gravity plus five colors — harder now.',
+        outro: 'Rainbow bubbles arrive on the dynamic board.',
         gridCols: 7, gridRows: 8, shape: 'rect', colors: PALETTE5,
         dynamic: false, gravity: true, rainbow: false, changing: false,
         timeLimit: 55, timeBonus: 0.7, targetCount: 42,
     },
     {
-        num: '2-4', theme: '爆发', keywords: '重力补位 · 倒计时 · 五色 · 彩虹',
-        narrative: '动态棋盘上的最终试炼。',
-        outro: '第二章通关！全章完结，圆满落幕。',
+        num: '2-4', theme: 'Burst', keywords: 'Gravity refill · Countdown · Five colors · Rainbow',
+        narrative: 'The final trial on a living board.',
+        outro: 'Chapter 2 complete! The whole journey ends here.',
         gridCols: 7, gridRows: 8, shape: 'rect', colors: PALETTE5,
         dynamic: false, gravity: true, rainbow: true, changing: false,
         timeLimit: 60, timeBonus: 0.7, targetCount: 49,
     },
     {
-        num: '2-5', theme: '七色', keywords: '重力补位 · 倒计时 · 七色 · 大面积',
-        narrative: '重力之下，七色大面积棋盘。',
-        outro: '连锁机制也来到了动态棋盘。',
+        num: '2-5', theme: 'Seven Colors', keywords: 'Gravity refill · Countdown · Seven colors · Big board',
+        narrative: 'Seven colors on a big gravity board.',
+        outro: 'Chains join the dynamic board.',
         gridCols: 7, gridRows: 8, shape: 'rect', colors: PALETTE7,
         dynamic: false, gravity: true, rainbow: false, changing: false,
         timeLimit: 60, timeBonus: 0.6, targetCount: 56,
     },
     {
-        num: '2-6', theme: '连锁', keywords: '重力 · 倒计时 · 七色 · 大面积 · 连锁泡泡',
-        narrative: '下落与连锁同时发生，注意节奏。',
-        outro: '最后的挑战：锁定泡泡加入动态棋盘。',
+        num: '2-6', theme: 'Chain', keywords: 'Gravity · Countdown · Seven colors · Big board · Chain',
+        narrative: 'Falling and chaining together — mind the rhythm.',
+        outro: 'The last challenge: frozen bubbles join the dynamic board.',
         gridCols: 7, gridRows: 8, shape: 'rect', colors: PALETTE7,
         dynamic: false, gravity: true, rainbow: false, changing: false, chain: true,
         timeLimit: 60, timeBonus: 0.6, targetCount: 56,
     },
     {
-        num: '2-7', theme: '锁定', keywords: '重力 · 七色 · 连锁 · 锁定泡泡',
-        narrative: '重力、连锁与锁定同场，最终试炼。',
-        outro: '第二章通关！全部关卡完成。',
+        num: '2-7', theme: 'Frozen', keywords: 'Gravity · Seven colors · Chain · Frozen',
+        narrative: 'Gravity, chains and frozen bubbles — the final trial.',
+        outro: 'Chapter 2 complete! All levels finished.',
         gridCols: 7, gridRows: 8, shape: 'rect', colors: PALETTE7,
         dynamic: false, gravity: true, rainbow: false, changing: false, chain: true, locked: true,
         timeLimit: 65, timeBonus: 0.6, targetCount: 56,
@@ -422,12 +422,12 @@ export class GameManager extends Component {
                     this.timerLeft = 0;
                     this.timeUp();
                 }
-                this.timerLabel.string = `时间 ${Math.ceil(this.timerLeft)}`;
+                this.timerLabel.string = `Time ${Math.ceil(this.timerLeft)}`;
             }
             // 进度数字逐帧校准（异常也不会与真实队列脱节）
             if (this.playing) {
                 const c0 = LEVELS[this.currentLevel];
-                if (c0) this.remainLabel.string = `剩余 ${Math.max(c0.targetCount - this.queueIdx, 0)}`;
+                if (c0) this.remainLabel.string = `Left ${Math.max(c0.targetCount - this.queueIdx, 0)}`;
             }
             // 重力补位：逐帧串行执行（不依赖定时器）
             if (this.gravityQueue.length > 0) {
@@ -627,8 +627,8 @@ export class GameManager extends Component {
 
     /** 教学完成后选择章节（第一章静态 / 第二章动态） */
     private showChapterSelect() {
-        this.showOverlay('选择章节', '第一章：静态棋盘·原位刷新\n第二章：动态棋盘·重力补位', [{
-            label: '第一章（静态）',
+        this.showOverlay('Select Chapter', 'Chapter 1: Static board · Live refill\nChapter 2: Dynamic board · Gravity refill', [{
+            label: 'Chapter 1',
             action: () => {
                 this.hideOverlay();
                 const save = loadSave();
@@ -638,7 +638,7 @@ export class GameManager extends Component {
                 this.gotoLevel(next === null ? STATIC_LEVELS[0] : next);
             },
         }, {
-            label: '第二章（动态）',
+            label: 'Chapter 2',
             action: () => {
                 this.hideOverlay();
                 const save = loadSave();
@@ -649,7 +649,7 @@ export class GameManager extends Component {
             },
         }]);
         this.btnC.active = true;
-        this.labelC.string = '返回主界面';
+        this.labelC.string = 'Home';
         this.actionC = () => this.showTitle();
         this.applyOverlayStyle(this.btnC, this.labelC, 'ghost');
     }
@@ -659,7 +659,7 @@ export class GameManager extends Component {
         this.drawProgress();
         this.playing = false;
         const buttons: { label: string; action: () => void }[] = [{
-            label: '开始游戏',
+            label: 'Start',
             action: () => {
                 this.hideOverlay();
                 const s = loadSave();
@@ -674,7 +674,7 @@ export class GameManager extends Component {
                 }
             },
         }, {
-            label: '从头开始',
+            label: 'Start Over',
             action: () => {
                 writeSave(defaultSave());
                 this.drawProgress();
@@ -682,16 +682,16 @@ export class GameManager extends Component {
                 this.gotoLevel(0);
             },
         }];
-        this.showOverlay('泡泡纸', '教学章 · 第一章（静态）· 第二章（动态）', buttons);
+        this.showOverlay('Pop Bubbles', 'Tutorial · Chapter 1 (Static) · Chapter 2 (Dynamic)', buttons);
         // 开发版：完整“选择关卡”；发布版：仅通关教学后开放“选择章节”
         if (IS_DEV) {
             this.btnC.active = true;
-            this.labelC.string = '选择关卡';
+            this.labelC.string = 'Select Level';
             this.actionC = () => this.showLevelSelect();
             this.applyOverlayStyle(this.btnC, this.labelC, 'ghost');
         } else if (save.tutorialsDone) {
             this.btnC.active = true;
-            this.labelC.string = '选择章节';
+            this.labelC.string = 'Select Chapter';
             this.actionC = () => this.showChapterSelect();
             this.applyOverlayStyle(this.btnC, this.labelC, 'ghost');
         } else {
@@ -759,13 +759,13 @@ export class GameManager extends Component {
         this.snakeCells = cfg.snake ? this.makeSnakeCells(cfg) : [];
         this.buildQueue(cfg);
 
-        this.titleLabel.string = `${cfg.num} · ${cfg.theme}`;
+        this.titleLabel.string = cfg.num;
         this.subtitleLabel.string = cfg.keywords;
         this.descLabel.string = cfg.narrative;
-        this.remainLabel.string = `剩余 ${cfg.targetCount}`;
+        this.remainLabel.string = `Left ${cfg.targetCount}`;
         this.comboLabel.string = '';
-        this.timerLabel.string = cfg.timeLimit > 0 ? `时间 ${cfg.timeLimit}` : '';
-        this.missLabel.string = '失误';
+        this.timerLabel.string = cfg.timeLimit > 0 ? `Time ${cfg.timeLimit}` : '';
+        this.missLabel.string = 'Misses';
         this.missLabel.color = COLOR_GRAY;
         this.drawMissDots(0);
         this.drawProgress();
@@ -817,7 +817,7 @@ export class GameManager extends Component {
         };
 
         // 开场主题卡：衔接上一关
-        this.showOverlay(`${cfg.num} · ${cfg.theme}`, `${cfg.keywords}\n${cfg.narrative}`, []);
+        this.showOverlay(cfg.num, `${cfg.keywords}\n${cfg.narrative}`, []);
         this.introTimer = 1.6;
         // 特殊泡泡首次出现：说明条排在开场卡之后（showOverlay 会清空队列，必须放在其后）
         this.queueSpecialTips(cfg);
@@ -1355,7 +1355,7 @@ export class GameManager extends Component {
         try {
             this.queueIdx++;
             const cfg = LEVELS[this.currentLevel];
-            this.remainLabel.string = `剩余 ${Math.max(cfg.targetCount - this.queueIdx, 0)}`;
+            this.remainLabel.string = `Left ${Math.max(cfg.targetCount - this.queueIdx, 0)}`;
         } catch (e) {
             this.cap('advance err', e);
         }
@@ -1434,7 +1434,7 @@ export class GameManager extends Component {
 
                 if (cfg.timeBonus > 0 && this.timerLeft > 0) {
                     this.timerLeft = Math.min(this.timerLeft + cfg.timeBonus, cfg.timeLimit);
-                    this.timerLabel.string = `时间 ${Math.ceil(this.timerLeft)}`;
+                    this.timerLabel.string = `Time ${Math.ceil(this.timerLeft)}`;
                 }
 
                 this.advanceQueue();
@@ -1456,7 +1456,7 @@ export class GameManager extends Component {
                 this.registerWrong();
                 if (cfg.timeLimit > 0) {
                     this.timerLeft = Math.max(0, this.timerLeft - 1);
-                    this.timerLabel.string = `时间 ${Math.ceil(this.timerLeft)}`;
+                    this.timerLabel.string = `Time ${Math.ceil(this.timerLeft)}`;
                 }
             }
 
@@ -1632,8 +1632,8 @@ export class GameManager extends Component {
         try {
             if (!this.playing) return;
             this.playing = false;
-            this.showOverlay('挑战失败', `累计捏错 ${MISTAKE_LIMIT} 次，再试一次！`, [{
-                label: '重新挑战',
+            this.showOverlay('Challenge Failed', `You missed ${MISTAKE_LIMIT} times. Try again!`, [{
+                label: 'Retry',
                 action: () => {
                     this.hideOverlay();
                     this.gotoLevel(this.currentLevel);
@@ -1681,7 +1681,7 @@ export class GameManager extends Component {
      */
     private queueRainbowIntro() {
         this.spawnRainbow();
-        this.showTip('彩虹泡泡出现了：可以当作任意目标色点破', 1);
+        this.showTip('A Rainbow Bubble appeared — it counts as any color!', 1);
     }
 
     // ---------------- 特殊泡泡提示 ----------------
@@ -1691,10 +1691,10 @@ export class GameManager extends Component {
         const seen = loadSave().intro || [];
         const list: { kind: string; text: string; sub: string }[] = [];
         // 全流程只做一次：第二/第三章再遇到就不再打断节奏
-        if (cfg.rainbow && seen.indexOf('rainbow') < 0) list.push({ kind: 'rainbow', text: '彩虹泡泡', sub: '可以当作任意目标色点破' });
-        if (cfg.chain && seen.indexOf('chain') < 0) list.push({ kind: 'chain', text: '连锁泡泡', sub: '点中它，上下左右同色的泡泡会一起消失' });
-        if (cfg.locked && seen.indexOf('locked') < 0) list.push({ kind: 'locked', text: '冰封泡泡', sub: '点不动，先炸掉它旁边任意一个泡泡即可解冻' });
-        if (cfg.changing && seen.indexOf('changing') < 0) list.push({ kind: 'changing', text: '变色泡泡', sub: '颜色不停变化，变成目标色时才能点破' });
+        if (cfg.rainbow && seen.indexOf('rainbow') < 0) list.push({ kind: 'rainbow', text: 'Rainbow Bubble', sub: 'Counts as any target color' });
+        if (cfg.chain && seen.indexOf('chain') < 0) list.push({ kind: 'chain', text: 'Chain Bubble', sub: 'Pop it and adjacent same-color bubbles burst too' });
+        if (cfg.locked && seen.indexOf('locked') < 0) list.push({ kind: 'locked', text: 'Frozen Bubble', sub: "Can't pop it — burst any neighbor to thaw it" });
+        if (cfg.changing && seen.indexOf('changing') < 0) list.push({ kind: 'changing', text: 'Shifting Bubble', sub: 'Its color keeps changing — pop it when it matches the target' });
         this.spotQueue = list;
         this.tipTimer = 0;
     }
@@ -1742,7 +1742,7 @@ export class GameManager extends Component {
     /** 在结算/失败/超时弹层上启用第三颗按钮：返回主菜单（回到开始界面） */
     private showHomeOnOverlay() {
         this.btnC.active = true;
-        this.labelC.string = '返回主菜单';
+        this.labelC.string = 'Home';
         this.actionC = () => {
             this.hideOverlay();
             this.showTitle();
@@ -1774,14 +1774,14 @@ export class GameManager extends Component {
         // 章节内顺序推进
         if (group === 'tutorial') {
             if (this.currentLevel === 0) {
-                this.showOverlay('通关！', cfg.outro, [{
-                    label: '下一节',
+                this.showOverlay('Level Complete!', cfg.outro, [{
+                    label: 'Next',
                     action: () => { this.hideOverlay(); this.gotoLevel(1); },
                 }]);
                 this.showHomeOnOverlay();
             } else {
-                this.showOverlay('教学完成！', '欢迎进入泡泡世界。', [{
-                    label: '选择章节',
+                this.showOverlay('Tutorial Complete!', 'Welcome to the bubble world.', [{
+                    label: 'Select Chapter',
                     action: () => { this.hideOverlay(); this.showChapterSelect(); },
                 }]);
                 this.showHomeOnOverlay();
@@ -1791,18 +1791,18 @@ export class GameManager extends Component {
         const list = group === 'ch1' ? STATIC_LEVELS : DYNAMIC_LEVELS;
         const pos = list.indexOf(this.currentLevel);
         if (pos >= 0 && pos < list.length - 1) {
-            this.showOverlay('通关！', cfg.outro, [{
-                label: '下一关',
+            this.showOverlay('Level Complete!', cfg.outro, [{
+                label: 'Next Level',
                 action: () => { this.hideOverlay(); this.gotoLevel(list[pos + 1]); },
             }]);
             this.showHomeOnOverlay();
             return;
         }
         // 该章最后一关
-        const chapterName = group === 'ch1' ? '第一章' : '第二章';
+        const chapterName = group === 'ch1' ? 'Chapter 1' : 'Chapter 2';
         if (group === 'ch1') {
-            this.showOverlay(`${chapterName} 通关！`, cfg.outro, [{
-                label: '进入第二章',
+            this.showOverlay(`${chapterName} Complete!`, cfg.outro, [{
+                label: 'Enter Chapter 2',
                 action: () => {
                     this.hideOverlay();
                     const s = loadSave();
@@ -1812,13 +1812,13 @@ export class GameManager extends Component {
                     this.gotoLevel(next === null ? DYNAMIC_LEVELS[0] : next);
                 },
             }, {
-                label: '再玩一次',
+                label: 'Play Again',
                 action: () => { this.hideOverlay(); this.gotoLevel(this.currentLevel); },
             }]);
             this.showHomeOnOverlay();
         } else {
-            this.showOverlay(`${chapterName} 通关！`, cfg.outro, [{
-                label: '再玩一次',
+            this.showOverlay(`${chapterName} Complete!`, cfg.outro, [{
+                label: 'Play Again',
                 action: () => { this.hideOverlay(); this.gotoLevel(this.currentLevel); },
             }]);
             this.showHomeOnOverlay();
@@ -1852,9 +1852,9 @@ export class GameManager extends Component {
             node.addChild(glow);
 
             // 主体大字
-            const title = this.makeLabelOn(node, '全部完成！', 56, new Color(59, 123, 245, 255), new Vec3(0, 10, 0));
+            const title = this.makeLabelOn(node, 'All Done!', 56, new Color(59, 123, 245, 255), new Vec3(0, 10, 0));
             title.node.getComponent(UITransform)!.setContentSize(420, 70);
-            const sub = this.makeLabelOn(node, '剩余泡泡即将爆开', 20, new Color(150, 172, 194, 255), new Vec3(0, -40, 0));
+            const sub = this.makeLabelOn(node, 'All remaining bubbles are bursting', 20, new Color(150, 172, 194, 255), new Vec3(0, -40, 0));
             sub.node.getComponent(UITransform)!.setContentSize(420, 28);
 
             // 三色扩散光环（错峰）
@@ -1985,8 +1985,8 @@ export class GameManager extends Component {
         try {
             if (!this.playing) return;
             this.playing = false;
-            this.showOverlay('时间到', '再试一次，找到自己的节拍。', [{
-                label: '重新开始',
+            this.showOverlay("Time's Up", 'Try again — find your own rhythm.', [{
+                label: 'Retry',
                 action: () => {
                     this.hideOverlay();
                     this.gotoLevel(this.currentLevel);
@@ -2015,7 +2015,7 @@ export class GameManager extends Component {
         this.titleLabel.isBold = true;
 
         // ---- “目标”提示 + 单个目标圆点 + 剩余 ----
-        this.targetHint = this.makeLabel('目标', 26, gray, new Vec3(0, 566, 0));
+        this.targetHint = this.makeLabel('Target', 26, gray, new Vec3(0, 566, 0));
         this.targetBar = new Node('TargetBar');
         this.targetBar.layer = Layers.Enum.UI_2D;
         this.targetBar.addComponent(UITransform).setContentSize(120, 120);
@@ -2032,7 +2032,7 @@ export class GameManager extends Component {
         this.timerLabel.node.getComponent(UITransform)!.setContentSize(320, 52);
         this.timerLabel.horizontalAlign = Label.HorizontalAlign.RIGHT;
         this.timerLabel.isBold = true;
-        this.missLabel = this.makeLabel('失误', 26, COLOR_GRAY, new Vec3(300, 566, 0));
+        this.missLabel = this.makeLabel('Misses', 26, COLOR_GRAY, new Vec3(300, 566, 0));
         this.missLabel.node.getComponent(UITransform)!.setContentSize(180, 36);
         this.missLabel.horizontalAlign = Label.HorizontalAlign.CENTER;
         const dots = new Node('MissDots');
@@ -2060,12 +2060,12 @@ export class GameManager extends Component {
         ];
 
         // 左上角关卡内按钮：重新开始 + 返回主界面（竖排、放大）
-        this.restartBtn = this.buildCornerButton('重新开始', new Vec3(-258, 578, 0));
+        this.restartBtn = this.buildCornerButton('Restart', new Vec3(-258, 578, 0));
         this.restartBtn.on(Button.EventType.CLICK, () => {
             if (!this.restartBtn.active) return;
             this.gotoLevel(this.currentLevel);
         }, this);
-        this.homeBtn = this.buildCornerButton('返回主界面', new Vec3(-258, 506, 0), 'violet');
+        this.homeBtn = this.buildCornerButton('Home', new Vec3(-258, 506, 0), 'violet');
         this.homeBtn.on(Button.EventType.CLICK, () => {
             if (!this.homeBtn.active) return;
             this.showTitle();
@@ -2180,7 +2180,7 @@ export class GameManager extends Component {
         this.drawSpotDim(at.x, at.y, 62);
         this.spotRing.setPosition(at.x, at.y, 0);
         this.spotTitle.string = text;
-        this.spotSub.string = `${sub}\n点击任意处继续`;
+        this.spotSub.string = `${sub}\nTap anywhere to continue`;
         // 说明卡放在高亮泡泡的另一侧，避免压住它
         this.spotCard.setPosition(0, at.y > 0 ? -470 : 430, 0);
         this.spotNode.active = true;
@@ -2241,25 +2241,25 @@ export class GameManager extends Component {
         g.fill();
     }
 
-    /** 特殊泡泡说明条：棋盘下方一张会淡入淡出的白色小卡片 */
+    /** 特殊泡泡说明条：棋盘上方（泡泡区与顶部提示区之间的空带）一张会淡入淡出的白色小卡片 */
     private buildTipCard() {
         const card = new Node('TipCard');
         card.layer = Layers.Enum.UI_2D;
-        card.addComponent(UITransform).setContentSize(620, 84);
-        card.setPosition(0, -456, 0);
+        card.addComponent(UITransform).setContentSize(620, 60);
+        card.setPosition(0, 330, 0);
         this.node.addChild(card);
         const g = card.addComponent(Graphics);
         g.fillColor = new Color(255, 255, 255, 238);
-        g.roundRect(-310, -42, 620, 84, 22);
+        g.roundRect(-310, -30, 620, 60, 18);
         g.fill();
         g.lineWidth = 2;
         g.strokeColor = new Color(200, 224, 250, 255);
-        g.roundRect(-310, -42, 620, 84, 22);
+        g.roundRect(-310, -30, 620, 60, 18);
         g.stroke();
         card.addComponent(UIOpacity);
-        const lbl = this.makeLabelOn(card, '', 21, new Color(52, 78, 104, 255), new Vec3(0, 0, 0));
-        lbl.node.getComponent(UITransform)!.setContentSize(580, 72);
-        lbl.lineHeight = 27;
+        const lbl = this.makeLabelOn(card, '', 20, new Color(52, 78, 104, 255), new Vec3(0, 0, 0));
+        lbl.node.getComponent(UITransform)!.setContentSize(580, 44);
+        lbl.lineHeight = 24;
         this.tipLabel = lbl;
         this.tipCard = card;
         card.active = false;
@@ -2453,7 +2453,7 @@ export class GameManager extends Component {
         this.backBtn.addComponent(UITransform).setContentSize(200, 44);
         this.backBtn.setPosition(0, -608, 0);
         this.backBtn.addComponent(Button);
-        const bl = this.makeLabelOn(this.backBtn, '返回主界面', 20, new Color(110, 130, 150, 255), new Vec3(0, 0, 0));
+        const bl = this.makeLabelOn(this.backBtn, 'Home', 20, new Color(110, 130, 150, 255), new Vec3(0, 0, 0));
         bl.node.getComponent(UITransform)!.setContentSize(240, 36);
         this.backBtn.on(Button.EventType.CLICK, () => { this.hideOverlay(); this.showTitle(); }, this);
         this.overlay.addChild(this.backBtn);
@@ -2632,8 +2632,8 @@ export class GameManager extends Component {
             this.showChapterSelect();
             return;
         }
-        this.overlayTitle.string = '选择关卡';
-        this.overlayDesc.string = '开发工具：可直接进入任意一节';
+        this.overlayTitle.string = 'Select Level';
+        this.overlayDesc.string = 'Dev tools: jump to any level';
         // 标题固定在屏幕最上方，列表在其下方开始
         this.overlayTitle.node.setPosition(0, 600, 0);
         this.overlayDesc.node.setPosition(0, 552, 0);
@@ -2690,7 +2690,7 @@ export class GameManager extends Component {
             node.addComponent(UITransform).setContentSize(640, ROW_H);
             node.setPosition(0, y, 0);
             node.addComponent(Button);
-            const label = this.makeLabelOn(node, `${cfg.num} · ${cfg.theme}`, 22,
+            const label = this.makeLabelOn(node, `${cfg.num}`, 22,
                 new Color(86, 116, 146, 255), new Vec3(10, 0, 0));
             label.node.getComponent(UITransform)!.setContentSize(560, 40);
             label.overflow = Label.Overflow.CLAMP;
@@ -2704,11 +2704,11 @@ export class GameManager extends Component {
             content.addChild(node);
             y -= ROW_STEP;
         };
-        heading('必经教学');
+        heading('Tutorial');
         TUTORIAL_LEVELS.forEach(row);
-        heading('第一章 · 静态');
+        heading('Chapter 1 · Static');
         STATIC_LEVELS.forEach(row);
-        heading('第二章 · 动态');
+        heading('Chapter 2 · Dynamic');
         DYNAMIC_LEVELS.forEach(row);
         // 底部返回（固定在屏幕下方，不参与滑动）
         this.backBtn.active = true;

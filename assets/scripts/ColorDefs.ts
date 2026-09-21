@@ -11,31 +11,31 @@ export interface BubbleColor {
 
 export const COLORS: Record<string, BubbleColor> = {
     red: {
-        key: 'red', name: '红', hex: '#FF3B5C',
+        key: 'red', name: 'Red', hex: '#FF3B5C',
         tint: new Color(255, 59, 92, 255), pitch: 0.62, audio: 'pop_red',
     },
     orange: {
-        key: 'orange', name: '橙', hex: '#FF7A29',
+        key: 'orange', name: 'Orange', hex: '#FF7A29',
         tint: new Color(255, 122, 41, 255), pitch: 0.78, audio: 'pop_orange',
     },
     yellow: {
-        key: 'yellow', name: '黄', hex: '#FFC400',
+        key: 'yellow', name: 'Yellow', hex: '#FFC400',
         tint: new Color(255, 196, 0, 255), pitch: 0.95, audio: 'pop_yellow',
     },
     green: {
-        key: 'green', name: '绿', hex: '#22C55E',
+        key: 'green', name: 'Green', hex: '#22C55E',
         tint: new Color(34, 197, 94, 255), pitch: 1.15, audio: 'pop_green',
     },
     cyan: {
-        key: 'cyan', name: '青', hex: '#00C2D1',
+        key: 'cyan', name: 'Cyan', hex: '#00C2D1',
         tint: new Color(0, 194, 209, 255), pitch: 1.4, audio: 'pop_cyan',
     },
     blue: {
-        key: 'blue', name: '蓝', hex: '#2563EB',
+        key: 'blue', name: 'Blue', hex: '#2563EB',
         tint: new Color(37, 99, 235, 255), pitch: 1.7, audio: 'pop_blue',
     },
     violet: {
-        key: 'violet', name: '紫', hex: '#7C3AED',
+        key: 'violet', name: 'Violet', hex: '#7C3AED',
         tint: new Color(124, 58, 237, 255), pitch: 2.0, audio: 'pop_violet',
     },
 };
