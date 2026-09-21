@@ -682,7 +682,7 @@ export class GameManager extends Component {
                 this.gotoLevel(0);
             },
         }];
-        this.showOverlay('Pop Bubbles', 'Tutorial · Chapter 1 (Static) · Chapter 2 (Dynamic)', buttons);
+        this.showOverlay('Pop Bubbles', 'Tutorial · Chapter 1 · Chapter 2', buttons);
         // 开发版：完整“选择关卡”；发布版：仅通关教学后开放“选择章节”
         if (IS_DEV) {
             this.btnC.active = true;
@@ -2420,9 +2420,12 @@ export class GameManager extends Component {
         this.overlay.addChild(this.overlayCard);
 
         this.overlayTitle = this.makeLabelOn(this.overlayCard, '', 48, new Color(72, 102, 132, 255), new Vec3(0, 180, 0));
-        this.overlayDesc = this.makeLabelOn(this.overlayCard, '', 24, new Color(148, 168, 188, 255), new Vec3(0, 108, 0));
-        this.overlayDesc.node.getComponent(UITransform)!.setContentSize(620, 120);
-        this.overlayDesc.lineHeight = 38;
+        this.overlayTitle.node.getComponent(UITransform)!.setContentSize(480, 64);
+        this.overlayTitle.overflow = Label.Overflow.SHRINK;
+        this.overlayDesc = this.makeLabelOn(this.overlayCard, '', 24, new Color(148, 168, 188, 255), new Vec3(0, 90, 0));
+        this.overlayDesc.node.getComponent(UITransform)!.setContentSize(480, 140);
+        this.overlayDesc.lineHeight = 34;
+        this.overlayDesc.overflow = Label.Overflow.SHRINK;
 
         const resetBtn = this.node.getChildByName('ResetBtn');
         const btnSF = resetBtn ? resetBtn.getComponent(Sprite)!.spriteFrame : null;
@@ -2583,11 +2586,16 @@ export class GameManager extends Component {
             card.setContentSize(540, 560);
             this.overlayCard.setPosition(0, 20, 0);
             this.overlayTitle.node.setPosition(0, 180, 0);
-            this.overlayDesc.node.setPosition(0, 108, 0);
             this.overlayTitle.fontSize = 48;
+            this.overlayTitle.node.getComponent(UITransform)!.setContentSize(480, 64);
+            this.overlayTitle.overflow = Label.Overflow.SHRINK;
+            this.overlayDesc.node.setPosition(0, 90, 0);
             this.overlayDesc.fontSize = 24;
-            this.overlayDesc.lineHeight = 38;
-            this.overlayDesc.node.getComponent(UITransform)!.setContentSize(620, 120);
+            this.overlayDesc.lineHeight = 34;
+            this.overlayDesc.node.getComponent(UITransform)!.setContentSize(480, 140);
+            this.overlayDesc.overflow = Label.Overflow.SHRINK;
+            this.overlayDesc.horizontalAlign = Label.HorizontalAlign.CENTER;
+            this.overlayDesc.verticalAlign = Label.VerticalAlign.CENTER;
             this.btnA.setPosition(0, 10, 0);
             this.btnA.setScale(1, 1, 1);
             this.btnB.setPosition(0, -80, 0);
